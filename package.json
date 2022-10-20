@@ -1,0 +1,26 @@
+{
+  "name": "series-manager",
+  "version": "0.1.0",
+  "description": "Manager for TV series using todoist as DB",
+  "main": "src/index.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sralloza/series-manager.git"
+  },
+  "author": "Diego Alloza González",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sralloza/series-manager/issues"
+  },
+  "homepage": "https://github.com/sralloza/series-manager#readme",
+  "dependencies": {
+    "bunyan": "^1.8.15",
+    "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^16.0.3",
+    "luxon": "^3.0.4",
+    "node-fetch": "^3.2.10"
+  }
+}
