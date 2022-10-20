@@ -1,22 +1,23 @@
 import bunyan from "bunyan";
 import dotenv from "dotenv";
 import { DateTime } from "luxon";
-import config from "./config.mjs";
-import { stats } from "./counters.mjs";
-import getEpisodes from "./episodes.mjs";
+import config from "./config";
+import { stats } from "./counters";
+import getEpisodes from "./episodes";
+import { Episode } from "./models/episode";
 import {
   addEpisodeTask,
   getEpisodeTasks,
-  updateEpisodeTask,
-} from "./todoist.mjs";
-import { genTaskDescription } from "./utils.mjs";
+  updateEpisodeTask
+} from "./todoist";
+import { genTaskDescription } from "./utils";
 
 const logger = bunyan.createLogger({ name: "main" });
 dotenv.config();
 
-const getAllEpisodes = async () => {
+const getAllEpisodes = async (): Promise<Episode[]> => {
   const today = DateTime.now().startOf("day");
-  const realEpisodes = [];
+  const realEpisodes: Episode[] = [];
 
   for (const serie of config.series) {
     const episodes = (await getEpisodes(serie.name, serie.encodedName)).filter(
@@ -62,4 +63,4 @@ const main = async () => {
   logger.info({ stats }, "Done");
 };
 
-await main();
+export default main;

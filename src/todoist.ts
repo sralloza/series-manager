@@ -1,23 +1,25 @@
 import bunyan from "bunyan";
 import { DateTime } from "luxon";
 import fetch from "node-fetch";
-import config from "./config.mjs";
-import { incrementTasksCreated, incrementTasksEdited } from "./counters.mjs";
-import { genTaskDescription, genTaskTitle } from "./utils.mjs";
+import config from "./config";
+import { incrementTasksCreated, incrementTasksEdited } from "./counters";
+import { Episode } from "./models/episode";
+import { Task } from "./models/task";
+import { genTaskDescription, genTaskTitle } from "./utils";
 
 const logger = bunyan.createLogger({ name: "todoist" });
 
-const isTask = (task) => {
+const isTask = (task: any) => {
   const parts = task.content.split(" ");
   const lastPart = parts[parts.length - 1];
   return /\d+x\d+/.test(lastPart);
 };
 
-export const getEpisodeTasks = async () => {
+export const getEpisodeTasks = async (): Promise<Task[]> => {
   const headers = { Authorization: "Bearer " + process.env.TODOIST_API_TOKEN };
-  let url ="https://api.todoist.com/rest/v2/tasks?project_id=" + config.todoist.project_id;
-  if (config.todoist.section_id !== undefined) {
-    url += "&section_id=" + config.todoist.section_id;
+  let url ="https://api.todoist.com/rest/v2/tasks?project_id=" + config.todoist.projectId;
+  if (config.todoist.sectionId !== undefined) {
+    url += "&section_id=" + config.todoist.sectionId;
   }
   const response = await fetch(
     url,
@@ -35,11 +37,11 @@ export const getEpisodeTasks = async () => {
   }
   return JSON.parse(await response.text())
     .filter(isTask)
-    .map((task) => {
+    .map((task: any) => {
       const parts = task.content.split(" ");
       const lastPart = parts[parts.length - 1]
         .split("x")
-        .map((e) => parseInt(e));
+        .map((e: string) => parseInt(e));
 
       return {
         id: task.id,
@@ -53,7 +55,7 @@ export const getEpisodeTasks = async () => {
     });
 };
 
-export const updateEpisodeTask = async (task, episode) => {
+export const updateEpisodeTask = async (task: Task, episode: Episode) => {
   logger.info({ task }, "Updating task");
 
   const payload = {
@@ -87,17 +89,17 @@ export const updateEpisodeTask = async (task, episode) => {
   incrementTasksEdited();
 };
 
-export const addEpisodeTask = async (episode) => {
+export const addEpisodeTask = async (episode: Episode) => {
   logger.info({ episode }, "Creating task for episode");
 
-  const payload = {
+  const payload: any = {
     content: genTaskTitle(episode),
     description: genTaskDescription(episode),
-    project_id: config.todoist.project_id,
+    project_id: config.todoist.projectId,
     due_date: episode.dateStr,
   };
-  if (config.todoist.section_id !== undefined) {
-    payload.section_id = config.todoist.section_id;
+  if (config.todoist.sectionId !== undefined) {
+    payload.section_id = config.todoist.sectionId;
   }
 
   const response = await fetch(
