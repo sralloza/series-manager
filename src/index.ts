@@ -1,5 +1,4 @@
 import bunyan from "bunyan";
-import dotenv from "dotenv";
 import { DateTime } from "luxon";
 import config from "./config";
 import { stats } from "./counters";
@@ -13,7 +12,6 @@ import {
 import { genTaskDescription } from "./utils";
 
 const logger = bunyan.createLogger({ name: "main" });
-dotenv.config();
 
 const getAllEpisodes = async (): Promise<Episode[]> => {
   const today = DateTime.now().startOf("day");

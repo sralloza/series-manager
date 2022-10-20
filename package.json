@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "prestart": "rimraf dist",
-    "start": "tsc && tsc-alias && node dist/cli.js",
+    "start": "tsc && node dist/cli.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/sralloza/series-manager#readme",
   "dependencies": {
+    "@doist/todoist-api-typescript": "^2.1.0",
     "bunyan": "^1.8.15",
     "cheerio": "^1.0.0-rc.12",
     "dotenv": "^16.0.3",
